@@ -67,4 +67,5 @@ export interface Config {
      * 重绘
      */
     repaint?: Function;
+    manualyStart?: boolean;
 }
