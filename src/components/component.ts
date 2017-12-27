@@ -17,6 +17,7 @@ export class CountdownComponent implements OnInit, OnChanges, OnDestroy {
     private left = 0;
     private parsed = false;
     private stoped = false;
+    private isRunning = false;
 
     @Input() config: Config;
     @Output() start = new EventEmitter();
@@ -35,7 +36,9 @@ export class CountdownComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit() {
         this.init();
-        this.callEvent('start');
+        if (!this.config.manualyStart) {
+            this.manualyStart();
+        }
     }
 
     ngOnDestroy(): void {
@@ -48,9 +51,18 @@ export class CountdownComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    manualyStart(){
+        if (this.isRunning) {
+            return;
+        }
+        this.init2();
+        this.isRunning = true;
+        this.callEvent('start');
+    }
     restart(): void  {
         if (!this.stoped) this.destroy();
         this.init();
+        this.init2();
         this.timer.start();
         this.callEvent('restart');
     }
@@ -142,6 +154,35 @@ export class CountdownComponent implements OnInit, OnChanges, OnDestroy {
         me.getLeft();
         me.reflow();
 
+        // // bind reflow to me
+        // const _reflow = me.reflow;
+        // me.reflow = (count: number = 0) => {
+        //     return _reflow.apply(me, [count]);
+        // };
+
+        // // 构建 notify
+        // if (me.config.notify) {
+        //     me.config.notify.forEach((time: number) => {
+        //         if (time < 1) throw new Error('由于当结束会调用 finished，所以 notify 通知必须全是正整数');
+        //         time = time * 1000;
+        //         time = time - time % me.frequency;
+        //         me._notify[time] = true;
+        //     });
+        // }
+
+        // me.start.emit();
+        // me.timer.add(me.reflow, me.frequency);
+        // show
+        el.style.display = 'inline';
+
+        return me;
+    }
+
+    private init2(){
+        const me = this;
+        // me.getLeft();
+        // me.reflow();
+
         // bind reflow to me
         const _reflow = me.reflow;
         me.reflow = (count: number = 0) => {
@@ -160,8 +201,8 @@ export class CountdownComponent implements OnInit, OnChanges, OnDestroy {
 
         me.start.emit();
         me.timer.add(me.reflow, me.frequency);
-        // show
-        el.style.display = 'inline';
+        // // show
+        // el.style.display = 'inline';
 
         return me;
     }
