@@ -90,7 +90,8 @@ export class CountdownComponent implements OnInit, OnChanges, OnDestroy {
             size: 'lite',
             effect: 'normal',
             varRegular: /\$\!([\-\w]+)\!/g,
-            clock: ['d', 100, 2, 'h', 24, 2, 'm', 60, 2, 's', 60, 2, 'u', 10, 1]
+            clock: ['d', 100, 2, 'h', 24, 2, 'm', 60, 2, 's', 60, 2, 'u', 10, 1],
+            manualyStart: false
         }, me.config);
 
         this.cls = `count-down ${me.config.size} ${me.config.className || ''}`;
